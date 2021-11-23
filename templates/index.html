@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="CSS/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/style.css') }}">
     <!-- <icone titre -->
-    <link rel="icon" type="image/png" sizes="16x16" href="images/img-icon1.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='images/img-icon1.png') }}">
 
     <title>HOME | IC GROUP</title>
 
     <!-- link vers bootstrap -->
-    <link rel="stylesheet" href="CSS/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/bootstrap.min.css') }}">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Teko:wght@300&display=swap" rel="stylesheet">
 
@@ -65,14 +65,14 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-6 mx-auto" style="height: 180px; width: 300px; margin: 10px; position: relative;">
-                   <a href=<%= ENV["ODOO_URL"] %>><div id="img_container">
-                        <img class="img" src="images/odoo.jpg" alt="Film1">
+                   <a href="{{ odoo_url }}"><div id="img_container">
+                        <img class="img" src="{{ url_for('static', filename='images/odoo.jpg') }}" alt="Film1">
                         <span class="opt3">Odoo</span>
                     </div></a>
                 </div>
                 <div class="col-sm-6 mx-auto" style="height: 180px; width: 300px; margin: 10px; position: relative;">
-                    <a href=<%= ENV["PGADMIN_URL"] %>><div id="img_container">
-                        <img class="img" src="images/PgAdmin4.png" alt="Film2">
+                    <a href="{{ pgadmin_url }}"><div id="img_container">
+                        <img class="img" src="{{ url_for('static', filename='images/PgAdmin4.png') }}" alt="Film2">
                         <span class="opt3">Postgres</span>
                     </div></a>
                 </div>
