@@ -65,13 +65,13 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-6 mx-auto" style="height: 180px; width: 300px; margin: 10px; position: relative;">
-                   <a href="odoo_url"><div id="img_container">
+                   <a href=<%= ENV["ODOO_URL"] %>><div id="img_container">
                         <img class="img" src="images/odoo.jpg" alt="Film1">
                         <span class="opt3">Odoo</span>
                     </div></a>
                 </div>
                 <div class="col-sm-6 mx-auto" style="height: 180px; width: 300px; margin: 10px; position: relative;">
-                    <a href="pgadmin_url"><div id="img_container">
+                    <a href=<%= ENV["PGADMIN_URL"] %>><div id="img_container">
                         <img class="img" src="images/PgAdmin4.png" alt="Film2">
                         <span class="opt3">Postgres</span>
                     </div></a>
