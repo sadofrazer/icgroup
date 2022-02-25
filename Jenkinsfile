@@ -74,6 +74,7 @@ pipeline{
                     script{	
                         sh '''#!/bin/bash
                            read DEPLOY_APP <<< $(awk '/deploy_app/ {sub(/^.* *deploy_app/,""); print $2}' releases.txt)
+                           export DEPLOY_APP=$(awk '/deploy_app/ {sub(/^.* *deploy_app/,""); print $2}' releases.txt)
                            echo "deploy_app=${DEPLOY_APP}"
                         '''
                         if ( env.DEPLOY_APP == "yes"){
