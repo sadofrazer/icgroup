@@ -69,11 +69,11 @@ pipeline{
                 withCredentials([sshUserPrivateKey(credentialsId: "ec2_private_key", keyFileVariable: 'keyfile', usernameVariable: 'NUSER')]) {
                     script{	
                         sh '''
-                           ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} "echo ${HOST_IP} ${PGADMIN_PORT} ${ODOO_PORT} ${IC_PORT} ${USERNAME} ${IMAGE_NAME} ${IMAGE_TAG} > /home/ubuntu/env_var.txt"
+                           ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} "echo -e 'HOST_IP: ${HOST_IP}\nPGADMIN_PORT: ${PGADMIN_PORT}\nODOO_PORT: ${ODOO_PORT}\nIC_PORT=${IC_PORT}\nUSERNAME: ${USERNAME}\nIMAGE_NAME: ${IMAGE_NAME}\nIMAGE_TAG: ${IMAGE_TAG} >' /home/ubuntu/env_var.yml"
                            ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} "read HOST_IP PGADMIN_PORT ODOO_PORT IC_PORT USERNAME IMAGE_NAME IMAGE_TAG < /home/ubuntu/env_var.txt"
                            scp -o StrictHostKeyChecking=no -i ${keyfile} $(pwd)/docker-compose.yml ${NUSER}@${HOST_IP}:/home/ubuntu/docker-compose.yml 
                            ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} cd /home/ubuntu && docker-compose down || true
-                           ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} docker-compose up -d
+                           ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} docker-compose --env-file ./env_var.yml up -d
                         '''
                     }
                 }
@@ -98,11 +98,11 @@ pipeline{
                                 input message: 'Do you want to approve the deploy in production?', ok: 'Yes'
                         }	
                         sh '''
-                           ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} "echo ${HOST_IP} ${PGADMIN_PORT} ${ODOO_PORT} ${IC_PORT} ${USERNAME} ${IMAGE_NAME} ${IMAGE_TAG} > /home/ubuntu/env_var.txt"
+                           ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} "echo -e 'HOST_IP: ${HOST_IP}\nPGADMIN_PORT: ${PGADMIN_PORT}\nODOO_PORT: ${ODOO_PORT}\nIC_PORT=${IC_PORT}\nUSERNAME: ${USERNAME}\nIMAGE_NAME: ${IMAGE_NAME}\nIMAGE_TAG: ${IMAGE_TAG} >' /home/ubuntu/env_var.yml"
                            ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} "read HOST_IP PGADMIN_PORT ODOO_PORT IC_PORT USERNAME IMAGE_NAME IMAGE_TAG < /home/ubuntu/env_var.txt"
                            scp -o StrictHostKeyChecking=no -i ${keyfile} $(pwd)/docker-compose.yml ${NUSER}@${HOST_IP}:/home/ubuntu/docker-compose.yml 
                            ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} cd /home/ubuntu && docker-compose down || true
-                           ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} docker-compose up -d
+                           ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} docker-compose --env-file ./env_var.yml up -d
                         '''
                     }
                 }
