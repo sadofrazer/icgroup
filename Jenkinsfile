@@ -23,6 +23,16 @@ pipeline{
         //         }
         //     }
         // }
+        stage ('Build Image'){
+            steps{
+                script{
+                    sh '''
+                       read IMAGE_TAG <<< $(awk '/version/ {sub(/^.* *version/,""); print $2}' releases.txt)
+                       docker build -t ${USERNAME}/${IMAGE_NAME}:${IMAGE_TAG} .
+                    '''
+                }
+            }
+        }
 
         stage ('Run a container and Test Image'){
             steps{
