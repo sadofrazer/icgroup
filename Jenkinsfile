@@ -74,10 +74,11 @@ pipeline{
                     script{	
                         sh '''#!/bin/bash
                            read DEPLOY_APP <<< $(awk '/deploy_app/ {sub(/^.* *deploy_app/,""); print $2}' releases.txt)
-                           echo ${DEPLOY_APP}
+                           echo deploy_app=${DEPLOY_APP}
                         '''
                         if ( env.DEPLOY_APP == "yes"){
                             sh '''#!/bin/bash
+                                echo deploy_app=${DEPLOY_APP}
                                 read IMAGE_TAG <<< $(awk '/version/ {sub(/^.* *version/,""); print $2}' releases.txt)
                                 ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} "echo -e 'HOST_IP=${HOST_IP}\nPGADMIN_PORT=${PGADMIN_PORT}\nODOO_PORT=${ODOO_PORT}\nIC_PORT=${IC_PORT}\nUSERNAME=${USERNAME}\nIMAGE_NAME=${IMAGE_NAME}\nIMAGE_TAG=${IMAGE_TAG}' > /home/ubuntu/.env"
                                 scp -o StrictHostKeyChecking=no -i ${keyfile} $(pwd)/docker-compose.yml ${NUSER}@${HOST_IP}:/home/ubuntu/docker-compose.yml
@@ -89,6 +90,7 @@ pipeline{
                         }
                         else if ( env.DEPLOY_APP == "no"){
                             sh '''#!/bin/bash
+                                echo deploy_app=${DEPLOY_APP}
                                 read IMAGE_TAG <<< $(awk '/version/ {sub(/^.* *version/,""); print $2}' releases.txt)
                                 read ODOO_URL <<< $(awk '/ODOO_URL/ {sub(/^.* *ODOO_URL/,""); print $2}' releases.txt)
                                 read PGADMIN_URL <<< $(awk '/PGADMIN_URL/ {sub(/^.* *PGADMIN_URL/,""); print $2}' releases.txt)
@@ -100,7 +102,7 @@ pipeline{
 
                         else {
                             sh 'echo the Deploy_app variable must only be yes or no'
-                            sh 'echo ${DEPLOY_APP}'
+                            sh 'echo deploy_app=${DEPLOY_APP}'
                         }
                         
                     }
