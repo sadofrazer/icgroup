@@ -69,7 +69,7 @@ pipeline{
                 ODOO_PORT = ""
             }
             steps{
-                withCredentials([sshUserPrivateKey(credentialsId: "ec2_prod_private_key", keyFileVariable: 'keyfile', usernameVariable: 'NUSER')]) {
+                withCredentials([sshUserPrivateKey(credentialsId: "ec2_private_key", keyFileVariable: 'keyfile', usernameVariable: 'NUSER')]) {
                     script{	
                         sh '''
                            ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} docker stop $CONTAINER_NAME || true
@@ -93,7 +93,7 @@ pipeline{
                 ODOO_PORT = ""
             }
             steps{
-                withCredentials([sshUserPrivateKey(credentialsId: "ec2_prod_private_key", keyFileVariable: 'keyfile', usernameVariable: 'NUSER')]) {
+                withCredentials([sshUserPrivateKey(credentialsId: "ec2_private_key", keyFileVariable: 'keyfile', usernameVariable: 'NUSER')]) {
                     script{
                         timeout(time: 15, unit: "MINUTES") {
                                 input message: 'Do you want to approve the deploy in production?', ok: 'Yes'
