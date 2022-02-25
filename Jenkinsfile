@@ -5,8 +5,8 @@ pipeline{
         IMAGE_TAG = "${BUILD_TAG}"
         USERNAME = "sadofrazer"
         CONTAINER_NAME = "ic-webapp-test"
-        STAGING_HOST = ""
-        PROD_HOST =""
+        STAGING_HOST = "54.175.114.236"
+        PROD_HOST ="54.175.114.236"
     }
 
     agent any
@@ -17,7 +17,7 @@ pipeline{
             steps{
                 script{
                     sh '''
-                      
+                      read IMAGE_TAG <<< $(awk '/version/ {sub(/^.* *version/,""); print $2}' releases.txt)
                       docker build -t ${USERNAME}/${IMAGE_NAME}:${IMAGE_TAG} .
                     '''
                 }
