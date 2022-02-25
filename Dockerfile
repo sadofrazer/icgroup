@@ -7,7 +7,7 @@ WORKDIR /opt
 
 RUN pip install flask==1.1.2 
 
-COPY . /opt/
+COPY ./app_files/ /opt/
 
 ENV ODOO_URL='https://www.odoo.com/'
 ENV PGADMIN_URL='https://WWW.pgadmin.org/'
