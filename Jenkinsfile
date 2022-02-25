@@ -16,7 +16,8 @@ pipeline{
         stage ('Build Image'){
             steps{
                 script{
-                    sh '''
+                    sh '''#!/bin/bash
+                       read IMAGE_TAG <<< $(awk '/version/ {sub(/^.* *version/,""); print $2}' releases.txt)
                        docker build -t ${USERNAME}/${IMAGE_NAME}:${IMAGE_TAG} .
                     '''
                 }
