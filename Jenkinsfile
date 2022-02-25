@@ -74,7 +74,7 @@ pipeline{
                         sh '''#!/bin/bash
                            read DEPLOY_APP <<< $(awk '/deploy_app/ {sub(/^.* *deploy_app/,""); print $2}' releases.txt)
                         '''
-                        if (DEPLOY_APP == "yes"){
+                        if ( env.DEPLOY_APP == "yes"){
                             sh '''#!/bin/bash
                                 read IMAGE_TAG <<< $(awk '/version/ {sub(/^.* *version/,""); print $2}' releases.txt)
                                 ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} "echo -e 'HOST_IP=${HOST_IP}\nPGADMIN_PORT=${PGADMIN_PORT}\nODOO_PORT=${ODOO_PORT}\nIC_PORT=${IC_PORT}\nUSERNAME=${USERNAME}\nIMAGE_NAME=${IMAGE_NAME}\nIMAGE_TAG=${IMAGE_TAG}' > /home/ubuntu/.env"
@@ -83,7 +83,7 @@ pipeline{
                                 ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} docker-compose up -d
                             '''
                         }
-                        else if ( DEPLOY_APP == "no"){
+                        else if ( env.DEPLOY_APP == "no"){
                             sh '''#!/bin/bash
                                 read IMAGE_TAG <<< $(awk '/version/ {sub(/^.* *version/,""); print $2}' releases.txt)
                                 read ODOO_URL <<< $(awk '/ODOO_URL/ {sub(/^.* *ODOO_URL/,""); print $2}' releases.txt)
