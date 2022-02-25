@@ -13,16 +13,6 @@ pipeline{
 
     stages{
 
-        // stage ('Build image'){
-        //     steps{
-        //         script{
-        //             sh '''
-        //               read IMAGE_TAG <<< $(awk '/version/ {sub(/^.* *version/,""); print $2}' releases.txt)
-        //               docker build -t ${USERNAME}/${IMAGE_NAME}:${IMAGE_TAG} .
-        //             '''
-        //         }
-        //     }
-        // }
         stage ('Build Image'){
             steps{
                 script{
@@ -39,9 +29,9 @@ pipeline{
                     sh '''
                        docker stop ${CONTAINER_NAME} || true
                        docker rm ${CONTAINER_NAME} || true
-                       docker run -d --name ${CONTAINER_NAME} -p 8080:8080 ${USERNAME}/${IMAGE_NAME}:${IMAGE_TAG}
+                       docker run -d --name ${CONTAINER_NAME} -p 8085:8080 ${USERNAME}/${IMAGE_NAME}:${IMAGE_TAG}
                        sleep 5
-                       curl http://localhost:8080 | grep -iq "IC GROUP"
+                       curl http://localhost:8085 | grep -iq "IC GROUP"
                     '''
                 }
             }
