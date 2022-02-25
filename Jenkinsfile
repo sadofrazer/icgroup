@@ -61,17 +61,16 @@ pipeline{
             }
             environment{
                 HOST_IP = "${STAGING_HOST}"
-                PGADMIN_PORT = ""
-                ODOO_PORT = ""
+                PGADMIN_PORT = "8082"
+                ODOO_PORT = "8081"
+                IC_PORT = "8080"
             }
             steps{
                 withCredentials([sshUserPrivateKey(credentialsId: "ec2_private_key", keyFileVariable: 'keyfile', usernameVariable: 'NUSER')]) {
                     script{	
                         sh '''
-                           ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} docker stop $CONTAINER_NAME || true
-                           ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} docker rm $CONTAINER_NAME || true
-                           ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} docker image prune -a || true
-                           ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} docker run --name $CONTAINER_NAME -d -e PORT=5000 -p 5000:5000 $USERNAME/$IMAGE_NAME:$IMAGE_TAG 
+                           ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} docker-compose down || true
+                           ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} docker-compose up -d
                         '''
                     }
                 }
@@ -85,8 +84,9 @@ pipeline{
             }
             environment{
                 HOST_IP = "${STAGING_HOST}"
-                PGADMIN_PORT = ""
-                ODOO_PORT = ""
+                PGADMIN_PORT = "8082"
+                ODOO_PORT = "8081"
+                IC_PORT = "8080"
             }
             steps{
                 withCredentials([sshUserPrivateKey(credentialsId: "ec2_private_key", keyFileVariable: 'keyfile', usernameVariable: 'NUSER')]) {
@@ -95,10 +95,8 @@ pipeline{
                                 input message: 'Do you want to approve the deploy in production?', ok: 'Yes'
                         }	
                         sh '''
-                           ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} docker stop $CONTAINER_NAME || true
-                           ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} docker rm $CONTAINER_NAME || true
-                           ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} docker image prune -a || true
-                           ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} docker run --name $CONTAINER_NAME -d -e PORT=5000 -p 5000:5000 $USERNAME/$IMAGE_NAME:$IMAGE_TAG 
+                           ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} docker-compose down || true
+                           ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} docker-compose up -d
                         '''
                     }
                 }
