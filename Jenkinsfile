@@ -69,6 +69,8 @@ pipeline{
                 withCredentials([sshUserPrivateKey(credentialsId: "ec2_private_key", keyFileVariable: 'keyfile', usernameVariable: 'NUSER')]) {
                     script{	
                         sh '''
+                           ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} echo ${HOST_IP} ${PGADMIN_PORT} ${ODOO_PORT} ${IC_PORT} ${USERNAME} ${IMAGE_NAME} ${IMAGE_TAG} > /home/ubuntu/env_var.txt
+                           ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} read HOST_IP PGADMIN_PORT ODOO_PORT IC_PORT USERNAME IMAGE_NAME IMAGE_TAG < /home/ubuntu/env_var.txt
                            scp -o StrictHostKeyChecking=no -i ${keyfile} $(pwd)/docker-compose.yml ${NUSER}@${HOST_IP}:/home/ubuntu/docker-compose.yml 
                            ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} cd /home/ubuntu && docker-compose down || true
                            ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} docker-compose up -d
@@ -96,6 +98,8 @@ pipeline{
                                 input message: 'Do you want to approve the deploy in production?', ok: 'Yes'
                         }	
                         sh '''
+                           ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} echo ${HOST_IP} ${PGADMIN_PORT} ${ODOO_PORT} ${IC_PORT} ${USERNAME} ${IMAGE_NAME} ${IMAGE_TAG} > /home/ubuntu/env_var.txt
+                           ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} read HOST_IP PGADMIN_PORT ODOO_PORT IC_PORT USERNAME IMAGE_NAME IMAGE_TAG < /home/ubuntu/env_var.txt
                            scp -o StrictHostKeyChecking=no -i ${keyfile} $(pwd)/docker-compose.yml ${NUSER}@${HOST_IP}:/home/ubuntu/docker-compose.yml 
                            ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} cd /home/ubuntu && docker-compose down || true
                            ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} docker-compose up -d
