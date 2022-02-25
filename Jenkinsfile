@@ -27,7 +27,8 @@ pipeline{
         stage ('Run a container and Test Image'){
             steps{
                 script{
-                    sh '''
+                    sh '''#!/bin/bash
+                       read IMAGE_TAG <<< $(awk '/version/ {sub(/^.* *version/,""); print $2}' releases.txt)
                        docker stop ${CONTAINER_NAME} || true
                        docker rm ${CONTAINER_NAME} || true
                        docker run -d --name ${CONTAINER_NAME} -p 8085:8080 ${USERNAME}/${IMAGE_NAME}:${IMAGE_TAG}
@@ -44,7 +45,8 @@ pipeline{
             }
             steps{
                 script{
-                    sh '''
+                    sh '''#!/bin/bash
+                       read IMAGE_TAG <<< $(awk '/version/ {sub(/^.* *version/,""); print $2}' releases.txt)
                        docker login -u ${USERNAME} -p ${PASSWORD}
                        docker push ${USERNAME}/${IMAGE_NAME}:${IMAGE_TAG}
                        docker stop ${CONTAINER_NAME}
@@ -69,7 +71,8 @@ pipeline{
             steps{
                 withCredentials([sshUserPrivateKey(credentialsId: "ec2_private_key", keyFileVariable: 'keyfile', usernameVariable: 'NUSER')]) {
                     script{	
-                        sh '''
+                        sh '''#!/bin/bash
+                           read IMAGE_TAG <<< $(awk '/version/ {sub(/^.* *version/,""); print $2}' releases.txt)
                            ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} "echo -e 'HOST_IP=${HOST_IP}\nPGADMIN_PORT=${PGADMIN_PORT}\nODOO_PORT=${ODOO_PORT}\nIC_PORT=${IC_PORT}\nUSERNAME=${USERNAME}\nIMAGE_NAME=${IMAGE_NAME}\nIMAGE_TAG=${IMAGE_TAG}' > /home/ubuntu/.env"
                            scp -o StrictHostKeyChecking=no -i ${keyfile} $(pwd)/docker-compose.yml ${NUSER}@${HOST_IP}:/home/ubuntu/docker-compose.yml 
                            ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} cd /home/ubuntu && docker-compose down || true
@@ -97,7 +100,8 @@ pipeline{
                         timeout(time: 15, unit: "MINUTES") {
                                 input message: 'Do you want to approve the deploy in production?', ok: 'Yes'
                         }	
-                        sh '''
+                        sh '''#!/bin/bash
+                           read IMAGE_TAG <<< $(awk '/version/ {sub(/^.* *version/,""); print $2}' releases.txt)
                            ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} "echo -e 'HOST_IP=${HOST_IP}\nPGADMIN_PORT=${PGADMIN_PORT}\nODOO_PORT=${ODOO_PORT}\nIC_PORT=${IC_PORT}\nUSERNAME=${USERNAME}\nIMAGE_NAME=${IMAGE_NAME}\nIMAGE_TAG=${IMAGE_TAG}' > /home/ubuntu/.env"
                            scp -o StrictHostKeyChecking=no -i ${keyfile} $(pwd)/docker-compose.yml ${NUSER}@${HOST_IP}:/home/ubuntu/docker-compose.yml 
                            ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} cd /home/ubuntu && docker-compose down || true
