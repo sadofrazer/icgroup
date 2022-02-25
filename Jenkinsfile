@@ -83,7 +83,7 @@ pipeline{
                                 ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} docker-compose up -d
                             '''
                         }
-                        else if ( DEPLOY_APP = "no"){
+                        else if ( DEPLOY_APP == "no"){
                             sh '''#!/bin/bash
                                 read IMAGE_TAG <<< $(awk '/version/ {sub(/^.* *version/,""); print $2}' releases.txt)
                                 read ODOO_URL <<< $(awk '/ODOO_URL/ {sub(/^.* *ODOO_URL/,""); print $2}' releases.txt)
