@@ -96,7 +96,7 @@ pipeline{
 
                         else {
                             sh 'echo the Deploy_app variable must only be yes or no'
-                            sh 'echo ${env.DEPLOY_APP}'
+                            sh 'echo ${DEPLOY_APP}'
                         }
                         
                     }
