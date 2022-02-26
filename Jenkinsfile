@@ -79,6 +79,7 @@ pipeline{
                                 ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} docker stop ${CONTAINER_NAME} || true
                                 ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} docker rm ${CONTAINER_NAME} || true
                                 ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} cd /home/ubuntu && docker-compose down || true
+                                ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} cd /home/ubuntu && docker-compose down || true
                                 ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} cd /home/ubuntu &&docker-compose up -d
                             '''
                         }
@@ -126,6 +127,7 @@ pipeline{
                                 scp -o StrictHostKeyChecking=no -i ${keyfile} $(pwd)/docker-compose.yml ${NUSER}@${HOST_IP}:/home/ubuntu/docker-compose.yml
                                 ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} docker stop ${CONTAINER_NAME} || true
                                 ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} docker rm ${CONTAINER_NAME} || true
+                                ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} cd /home/ubuntu && docker-compose down || true
                                 ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} cd /home/ubuntu && docker-compose down || true
                                 ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} cd /home/ubuntu &&docker-compose up -d
                             '''
