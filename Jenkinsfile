@@ -77,7 +77,7 @@ pipeline{
                            echo "deploy_app=${DEPLOY_APP}"
                         '''
                         DEPLOY_APP = sh(
-                            script: "$(awk '/deploy_app/ {sub(/^.* *deploy_app/,""); print $2}' releases.txt)", returnStdout: true
+                            script: "awk '/deploy_app/ {sub(/^.* *deploy_app/,""); print $2}' releases.txt", returnStdout: true
                         ).trim() 
                         if ( env.DEPLOY_APP == "yes"){
                             sh '''#!/bin/bash
