@@ -74,9 +74,11 @@ pipeline{
                     script{	
                         sh '''#!/bin/bash
                            read DEPLOY_APP <<< $(awk '/deploy_app/ {sub(/^.* *deploy_app/,""); print $2}' releases.txt)
-                           export DEPLOY_APP=$(awk '/deploy_app/ {sub(/^.* *deploy_app/,""); print $2}' releases.txt)
                            echo "deploy_app=${DEPLOY_APP}"
                         '''
+                        DEPLOY_APP = sh(
+                            script: "$(awk '/deploy_app/ {sub(/^.* *deploy_app/,""); print $2}' releases.txt)", returnStdout: true
+                        ).trim() 
                         if ( env.DEPLOY_APP == "yes"){
                             sh '''#!/bin/bash
                                 echo "deploy_app=${DEPLOY_APP}"
