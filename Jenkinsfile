@@ -109,7 +109,7 @@ pipeline{
                 expression { GIT_BRANCH == 'origin/master'}
             }
             environment{
-                HOST_IP = "${STAGING_HOST}"
+                HOST_IP = "${PROD_HOST}"
                 PGADMIN_PORT = "8082"
                 ODOO_PORT = "8081"
                 IC_PORT = "8080"
