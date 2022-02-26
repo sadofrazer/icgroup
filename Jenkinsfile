@@ -7,7 +7,7 @@ pipeline{
         CONTAINER_NAME = "ic-webapp-test"
         STAGING_HOST = "54.175.114.236"
         PROD_HOST = "54.175.114.236"
-        DEPLOY_APP = "no"
+        DEPLOY_APP = "${sh(script:'awk \'/deploy_app/ {sub(/^.* *deploy_app/,""); print $2}\' releases.txt', returnStdout: true).trim()}"
     }
 
     agent any
@@ -76,9 +76,6 @@ pipeline{
                            read DEPLOY_APP <<< $(awk '/deploy_app/ {sub(/^.* *deploy_app/,""); print $2}' releases.txt)
                            echo "deploy_app=${DEPLOY_APP}"
                         '''
-                        DEPLOY_APP = sh(
-                            script: 'echo yes', returnStdout: true
-                        ).trim() 
                         if ( env.DEPLOY_APP == "yes"){
                             sh '''#!/bin/bash
                                 echo "deploy_app=${DEPLOY_APP}"
