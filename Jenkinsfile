@@ -80,7 +80,7 @@ pipeline{
                                 ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} "docker rm ${CONTAINER_NAME} || true"
                                 ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} "cd /home/ubuntu && docker-compose down || true"
                                 sleep 5
-                                ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} "cd /home/ubuntu &&docker-compose up -d"
+                                ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} "cd /home/ubuntu && docker-compose up -d"
                             '''
                         }
                         else if ( env.DEPLOY_APP == "no"){
