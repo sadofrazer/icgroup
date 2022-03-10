@@ -1,0 +1,34 @@
+---
+# tasks file for ic_role
+- name: create ic_files dir
+  file:
+    path: "/home/{{ ansible_user }}/ic_files/"
+    recurse: yes
+    state: directory
+
+- name: download Install script docker
+  template:
+    src: "install-docker.sh.j2"
+    dest: "/home/{{ ansible_user }}/ic_files/install-docker.sh"
+  when: ansible_docker0 is undefined
+
+- name: "Run docker script"
+  command: "sh install-docker.sh"
+  args:
+    chdir: "/home/{{ ansible_user }}/ic_files"
+  when: ansible_docker0 is undefined
+
+- name: generate docker-compose_file 
+  template:
+    src: "docker-compose.yml.j2"
+    dest: "/home/{{ ansible_user }}/ic_files/docker-compose.yml"
+
+- name: generate pgadmin config file 
+  template:
+    src: "servers.json.j2"
+    dest: "/home/{{ ansible_user }}/ic_files/servers.json"
+
+- name: "Deploy apps"
+  command: "docker-compose up -d"
+  args:
+    chdir: "/home/{{ ansible_user }}/ic_files"

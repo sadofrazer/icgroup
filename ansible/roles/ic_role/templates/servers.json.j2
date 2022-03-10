@@ -1,0 +1,13 @@
+{
+    "Servers": {
+      "1": {
+        "Name": "{{ DB_NAME }}", 
+        "Group": "docker_postgres_group",
+        "Host": "{{ DB_NAME }}", 
+        "Port": "{{ POSTGRES_PORT }}" ,
+        "MaintenanceDB": "{{ DB_NAME }}", 
+        "Username": "{{ DB_USER }}",
+        "SSLMode": "prefer"
+      }
+    }
+}
