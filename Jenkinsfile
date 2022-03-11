@@ -60,7 +60,7 @@ pipeline{
         stage ('deploy app on Staging env'){
             agent any
             when {
-                expression { GIT_BRANCH == 'origin/master'}
+                expression { GIT_BRANCH == 'origin/ansible-feat'}
             }
             environment{
                 HOST_IP = "${STAGING_HOST}"
@@ -107,7 +107,7 @@ pipeline{
         stage ('deploy app on Prod env'){
             agent any
             when {
-                expression { GIT_BRANCH == 'origin/master'}
+                expression { GIT_BRANCH == 'origin/ansible-feat'}
             }
             environment{
                 HOST_IP = "${PROD_HOST}"
