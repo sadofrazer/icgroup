@@ -11,7 +11,7 @@ services:
         ports:
             - "{{ PGADMIN_PORT }}:80"
         volumes:
-            - /home/{{ ansible_user }}/servers.json:/pgadmin4/servers.json
+            - /home/{{ ansible_user }}/ic_files/servers.json:/pgadmin4/servers.json
             - 'pgadmin_data:/var/lib/pgadmin'
     postgres:
         environment:

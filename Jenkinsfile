@@ -64,9 +64,9 @@ pipeline{
             }
             environment{
                 HOST_IP = "${STAGING_HOST}"
-                PGADMIN_PORT = "8083"
-                ODOO_PORT = "8082"
-                IC_PORT = "8081"
+                PGADMIN_PORT = "8082"
+                ODOO_PORT = "8081"
+                IC_PORT = "80"
                 HOST_USER = "frazer"
             }
             steps{
@@ -102,15 +102,20 @@ pipeline{
         }
 
         stage ('deploy app on Prod env'){
-            agent any
+            agent {
+                docker {
+                    image('test-ubuntu')
+                    args ' -u root'
+                }
+            }
             when {
                 expression { GIT_BRANCH == 'origin/ansible-feat'}
             }
             environment{
                 HOST_IP = "${PROD_HOST}"
-                PGADMIN_PORT = "8083"
-                ODOO_PORT = "8082"
-                IC_PORT = "8081"
+                PGADMIN_PORT = "8082"
+                ODOO_PORT = "8081"
+                IC_PORT = "80"
             }
             steps{
                 withCredentials([sshUserPrivateKey(credentialsId: "ec2_private_key", keyFileVariable: 'keyfile', usernameVariable: 'NUSER')]) {
@@ -119,28 +124,23 @@ pipeline{
                                 input message: 'Do you want to approve the deploy in production?', ok: 'Yes'
                         }	
                         if ( env.DEPLOY_APP == "yes"){
-                            sh '''#!/bin/bash
+                            sh '''
+                                ansible --version || apt install ansible -y
                                 echo "deploy_app=${DEPLOY_APP}"
-                                ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} "echo -e 'HOST_IP=${HOST_IP}\nPGADMIN_PORT=${PGADMIN_PORT}\nODOO_PORT=${ODOO_PORT}\nIC_PORT=${IC_PORT}\nUSERNAME=${USERNAME}\nIMAGE_NAME=${IMAGE_NAME}\nIMAGE_TAG=${IMAGE_TAG}' > /home/ubuntu/.env"
-                                scp -o StrictHostKeyChecking=no -i ${keyfile} $(pwd)/docker-compose.yml ${NUSER}@${HOST_IP}:/home/ubuntu/docker-compose.yml
                                 ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} "docker stop ${CONTAINER_NAME} || true"
                                 ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} "docker rm ${CONTAINER_NAME} || true"
-                                ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} "cd /home/ubuntu && docker-compose down || true"
-                                sleep 5
-                                ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} "cd /home/ubuntu &&docker-compose up -d"
+                                cd ansible
+                                ansible-playbook -i hosts.yml ic-play.yml -e ansible_user=${HOST_USER} -e IC_IMAGE_NAME=${USERNAME}/${IMAGE_NAME}:${IMAGE_TAG} -e HOST_IP=${HOST_IP} --private-key ${keyfile}
                             '''
                         }
                         else if ( env.DEPLOY_APP == "no"){
                             echo "ODOO_URL = ${env.ODOO_URL} et PGADMIN_URL= ${env.PGADMIN_URL}"
                             sh '''#!/bin/bash
                                 echo "deploy_app=${DEPLOY_APP}"
-                                scp -o StrictHostKeyChecking=no -i ${keyfile} $(pwd)/docker-compose.yml ${NUSER}@${HOST_IP}:/home/ubuntu/docker-compose.yml
                                 ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} "docker stop ${CONTAINER_NAME} || true"
                                 ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} "docker rm ${CONTAINER_NAME} || true"
-                                ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} "cd /home/ubuntu && docker-compose down || true"
-                                sleep 5
                                 ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} "docker run -d --name ${CONTAINER_NAME} -p ${IC_PORT}:8080 -e ODOO_URL=${ODOO_URL} -e PGADMIN_URL=${PGADMIN_URL} ${USERNAME}/${IMAGE_NAME}:${IMAGE_TAG} || true"
-                            '''  
+                            ''' 
                         }
 
                         else {
