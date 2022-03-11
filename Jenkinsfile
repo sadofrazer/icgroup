@@ -21,6 +21,7 @@ pipeline{
                 script{
                     sh '''#!/bin/bash
                        docker build -t ${USERNAME}/${IMAGE_NAME}:${IMAGE_TAG} .
+                       docker build -t ansible-ubuntu ./ansible
                     '''
                 }
             }
@@ -104,7 +105,7 @@ pipeline{
         stage ('deploy app on Prod env'){
             agent {
                 docker {
-                    image('test-ubuntu')
+                    image('ansible-ubuntu')
                     args ' -u root'
                 }
             }
