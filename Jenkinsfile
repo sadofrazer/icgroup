@@ -116,6 +116,7 @@ pipeline{
                 PGADMIN_PORT = "8082"
                 ODOO_PORT = "8081"
                 IC_PORT = "80"
+                HOST_USER = "frazer"
             }
             steps{
                 withCredentials([sshUserPrivateKey(credentialsId: "ec2_private_key", keyFileVariable: 'keyfile', usernameVariable: 'NUSER')]) {
