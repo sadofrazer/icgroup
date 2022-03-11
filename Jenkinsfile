@@ -64,9 +64,9 @@ pipeline{
             }
             environment{
                 HOST_IP = "${STAGING_HOST}"
-                PGADMIN_PORT = "8082"
-                ODOO_PORT = "8081"
-                IC_PORT = "8080"
+                PGADMIN_PORT = "8083"
+                ODOO_PORT = "8082"
+                IC_PORT = "8081"
                 HOST_USER = "frazer"
             }
             steps{
@@ -85,11 +85,8 @@ pipeline{
                             echo "ODOO_URL = ${env.ODOO_URL} et PGADMIN_URL= ${env.PGADMIN_URL}"
                             sh '''#!/bin/bash
                                 echo "deploy_app=${DEPLOY_APP}"
-                                scp -o StrictHostKeyChecking=no -i ${keyfile} $(pwd)/docker-compose.yml ${NUSER}@${HOST_IP}:/home/ubuntu/docker-compose.yml
                                 ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} "docker stop ${CONTAINER_NAME} || true"
                                 ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} "docker rm ${CONTAINER_NAME} || true"
-                                ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} "cd /home/ubuntu && docker-compose down || true"
-                                sleep 5
                                 ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} "docker run -d --name ${CONTAINER_NAME} -p ${IC_PORT}:8080 -e ODOO_URL=${ODOO_URL} -e PGADMIN_URL=${PGADMIN_URL} ${USERNAME}/${IMAGE_NAME}:${IMAGE_TAG} || true"
                             '''  
                         }
@@ -111,9 +108,9 @@ pipeline{
             }
             environment{
                 HOST_IP = "${PROD_HOST}"
-                PGADMIN_PORT = "8082"
-                ODOO_PORT = "8081"
-                IC_PORT = "8080"
+                PGADMIN_PORT = "8083"
+                ODOO_PORT = "8082"
+                IC_PORT = "8081"
             }
             steps{
                 withCredentials([sshUserPrivateKey(credentialsId: "ec2_private_key", keyFileVariable: 'keyfile', usernameVariable: 'NUSER')]) {
