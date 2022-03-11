@@ -1,5 +1,5 @@
 - name: deploy ic webapp using a role
-  hosts: localhost
+  hosts: prod
   become: true
   roles:
     - ic_role
