@@ -1,6 +1,5 @@
-**/**/terraform/
-**/terraform/
-**/**/.terraform/
+**/**/**/terraform/
+**/**/**/.terraform/
 .terraform/
 *.tfstate
 *.backup
