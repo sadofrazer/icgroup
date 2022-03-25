@@ -58,13 +58,27 @@ pipeline{
                 }
             }
         }
+
+        stage ('Deploy staging infra'){
+            
+            steps{
+                script{
+                    sh '''#!/bin/bash
+                       cd terraform/staging
+                       terraform init
+                       terraform apply --auto-approve
+                    '''
+                }
+            }
+        }
+
         stage ('deploy app on Staging env'){
             agent any
             when {
                 expression { GIT_BRANCH == 'origin/ansible-feat'}
             }
             environment{
-                HOST_IP = "${STAGING_HOST}"
+                HOST_IP = sh(script:'', returnStdout: true).trim()
                 PGADMIN_PORT = "8082"
                 ODOO_PORT = "8081"
                 IC_PORT = "80"
@@ -103,6 +117,22 @@ pipeline{
             }
         }
 
+        stage ('Deploy prod infra'){
+            
+            steps{
+                script{
+                    timeout(time: 15, unit: "MINUTES") {
+                        input message: 'Do you want to approve the deploy in production?', ok: 'Yes'
+                    }
+                    sh '''#!/bin/bash
+                       cd terraform/prod
+                       terraform init
+                       terraform apply --auto-approve
+                    '''
+                }
+            }
+        }
+
         stage ('deploy app on Prod env'){
             agent {
                 docker {
@@ -122,10 +152,7 @@ pipeline{
             }
             steps{
                 withCredentials([sshUserPrivateKey(credentialsId: "ec2_private_key", keyFileVariable: 'keyfile', usernameVariable: 'NUSER')]) {
-                    script{
-                        timeout(time: 15, unit: "MINUTES") {
-                                input message: 'Do you want to approve the deploy in production?', ok: 'Yes'
-                        }	
+                    script{	
                         if ( env.DEPLOY_APP == "yes"){
                             sh '''
                                 ansible --version || apt install ansible -y
