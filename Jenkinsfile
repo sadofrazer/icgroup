@@ -147,7 +147,8 @@ pipeline{
                             terraform --version || chmod +x terraform
                             terraform --version || mv terraform /usr/sbin/terraform
                             terraform --version
-                            cd prod
+                            cd staging && terraform init -reconfigure && terraform destroy -auto-approve
+                            cd ../prod
                             terraform init --reconfigure
                             terraform apply --auto-approve
                             terraform output --raw ec2_public_ip > $HOME/.aws/public_ip.txt
