@@ -76,7 +76,8 @@ pipeline{
                             cd staging
                             terraform init --reconfigure
                             terraform apply --auto-approve
-                            terraform output --raw ec2_public_ip > public_ip.txt
+                            terraform output --raw ec2_public_ip
+                            terraform output --raw ec2_public_ip > $HOME/.aws/public_ip.txt
                         '''
                     }
                 }
@@ -89,7 +90,7 @@ pipeline{
                 expression { GIT_BRANCH == 'origin/terraform-feat'}
             }
             environment{
-                HOST_IP = sh(script:'cd terraform/prod && cat public_ip.txt', returnStdout: true).trim()
+                HOST_IP = sh(script:'cat $HOME/.aws/public_ip.txt', returnStdout: true).trim()
                 PGADMIN_PORT = "8082"
                 ODOO_PORT = "8081"
                 IC_PORT = "80"
@@ -167,7 +168,7 @@ pipeline{
                 expression { GIT_BRANCH == 'origin/terraform-feat'}
             }
             environment{
-                HOST_IP = sh(script:'cd terraform/prod && cat public_ip.txt', returnStdout: true).trim()
+                HOST_IP = sh(script:'cat $HOME/.aws/public_ip.txt', returnStdout: true).trim()
                 PGADMIN_PORT = "8082"
                 ODOO_PORT = "8081"
                 IC_PORT = "80"
