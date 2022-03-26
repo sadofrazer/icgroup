@@ -105,7 +105,7 @@ pipeline{
                                 ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} "docker stop ${CONTAINER_NAME} || true"
                                 ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} "docker rm ${CONTAINER_NAME} || true"
                                 cd ansible
-                                ansible --version || sudo apt install ansible -y
+                                ansible --version || sudo apt install ansible -y || yum install ansible -y
                                 ansible-playbook -i hosts.yml ic-play.yml -e ansible_user=${HOST_USER} -e IC_IMAGE_NAME=${USERNAME}/${IMAGE_NAME}:${IMAGE_TAG} -e HOST_IP=${HOST_IP} --private-key ${keyfile}
                             '''
                         }
@@ -178,7 +178,7 @@ pipeline{
                     script{	
                         if ( env.DEPLOY_APP == "yes"){
                             sh '''
-                                ansible --version || apt install ansible -y
+                                ansible --version || apt install ansible -y || yum install ansible -y
                                 echo "deploy_app=${DEPLOY_APP}"
                                 ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} "docker stop ${CONTAINER_NAME} || true"
                                 ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} "docker rm ${CONTAINER_NAME} || true"
