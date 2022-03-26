@@ -1,6 +1,6 @@
 provider "aws" {
   region                  = "us-east-1"
-  shared_credentials_file = "/Users/sadofrazer/Données/DevOps/AWS/.aws/credentials"
+  shared_credentials_file = "$HOME/.aws/credentials"
 }
 
 terraform {
@@ -8,12 +8,12 @@ terraform {
    bucket                  = "terraform-backend-frazer"
    key                     = "frazer-staging.tfstate"
    region                  = "us-east-1"
-   shared_credentials_file = "/Users/sadofrazer/Données/DevOps/AWS/.aws/credentials"
+   shared_credentials_file = "$HOME/.aws/credentials"
  }
 }
 
 
-#prodel du module de création du sg
+#Appel du module de création du sg
 module "sg" {
   source        = "../modules/sg"
   author = "staging"

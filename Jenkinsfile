@@ -65,10 +65,12 @@ pipeline{
                 withCredentials([file(credentialsId: 'aws_credentials', variable: 'FILE')]) {
                     script{
                         sh '''#!/bin/bash
-                            cp $FILE $HOME/credentials
+                            ls $HOME/.aws || mkdir $HOME/.aws
+                            cp $FILE $HOME/.aws/credentials
                             cd terraform
                             terraform --version || curl https://releases.hashicorp.com/terraform/1.1.7/terraform_1.1.7_linux_amd64.zip > terraform.zip
-                            terraform --version || unzip terraform.zip && chmod +x terraform
+                            terraform --version || unzip terraform.zip
+                            terraform --version || chmod +x terraform
                             terraform --version || mv terraform /usr/sbin/terraform
                             terraform --version
                             cd staging
@@ -134,10 +136,12 @@ pipeline{
                             input message: 'Do you want to approve the deploy in production?', ok: 'Yes'
                         }
                         sh '''#!/bin/bash
-                            cp $FILE $HOME/credentials
+                            ls $HOME/.aws || mkdir $HOME/.aws
+                            cp $FILE $HOME/.aws/credentials
                             cd terraform
                             terraform --version || curl https://releases.hashicorp.com/terraform/1.1.7/terraform_1.1.7_linux_amd64.zip > terraform.zip
-                            terraform --version || unzip terraform.zip && chmod +x terraform
+                            terraform --version || unzip terraform.zip
+                            terraform --version || chmod +x terraform
                             terraform --version || mv terraform /usr/sbin/terraform
                             terraform --version
                             cd prod
