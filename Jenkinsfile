@@ -79,7 +79,7 @@ pipeline{
         stage ('deploy app on Staging env'){
             agent any
             when {
-                expression { GIT_BRANCH == 'origin/ansible-feat'}
+                expression { GIT_BRANCH == 'origin/terraform-feat'}
             }
             environment{
                 HOST_IP = sh(script:'cd terraform/staging && terraform output ec2_public_ip', returnStdout: true).trim()
@@ -149,7 +149,7 @@ pipeline{
                 }
             }
             when {
-                expression { GIT_BRANCH == 'origin/ansible-feat'}
+                expression { GIT_BRANCH == 'origin/terraform-feat'}
             }
             environment{
                 HOST_IP = sh(script:'cd terraform/prod && terraform output ec2_public_ip', returnStdout: true).trim()
