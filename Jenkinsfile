@@ -90,6 +90,7 @@ pipeline{
                 expression { GIT_BRANCH == 'origin/terraform-feat'}
             }
             environment{
+                HOST_IP = sh(script:'cat $HOME/.aws/public_ip.txt', returnStdout: true).trim()
                 PGADMIN_PORT = "8082"
                 ODOO_PORT = "8081"
                 IC_PORT = "80"
@@ -167,7 +168,6 @@ pipeline{
                 expression { GIT_BRANCH == 'origin/terraform-feat'}
             }
             environment{
-                HOST_IP = sh(script:'cat $HOME/.aws/public_ip.txt', returnStdout: true).trim()
                 PGADMIN_PORT = "8082"
                 ODOO_PORT = "8081"
                 IC_PORT = "80"
