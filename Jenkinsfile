@@ -64,9 +64,9 @@ pipeline{
             steps{
                 script{
                     sh '''#!/bin/bash
-                       terraform --version || curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
-                       terraform --version || sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
-                       terraform --version || sudo apt-get update && sudo apt-get install terraform
+                       terraform --version || curl https://releases.hashicorp.com/terraform/1.1.7/terraform_1.1.7_linux_amd64.zip > terraform.zip
+                       terraform --version || unzip terraform.zip && chmod +x terraform
+                       terraform --version || mv terraform /usr/sbin/terraform
                        terraform --version
                        cd terraform/staging
                        terraform init
@@ -129,9 +129,9 @@ pipeline{
                         input message: 'Do you want to approve the deploy in production?', ok: 'Yes'
                     }
                     sh '''#!/bin/bash
-                       terraform --version || curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
-                       terraform --version || sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
-                       terraform --version || sudo apt-get update && sudo apt-get install terraform
+                       terraform --version || curl https://releases.hashicorp.com/terraform/1.1.7/terraform_1.1.7_linux_amd64.zip > terraform.zip
+                       terraform --version || unzip terraform.zip && chmod +x terraform
+                       terraform --version || mv terraform /usr/sbin/terraform
                        terraform --version
                        cd terraform/prod
                        terraform init
