@@ -34,7 +34,7 @@ resource "aws_security_group" "my_sg" {
   ingress {
     description      = "8080-8085 from all"
     from_port        = 8080
-    to_port          = 8081
+    to_port          = 8085
     protocol         = "tcp"
     cidr_blocks      = ["0.0.0.0/0"]
     ipv6_cidr_blocks = ["::/0"]
