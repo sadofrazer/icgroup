@@ -64,6 +64,10 @@ pipeline{
             steps{
                 script{
                     sh '''#!/bin/bash
+                       terraform --version || curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+                       terraform --version || sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+                       terraform --version || sudo apt-get update && sudo apt-get install terraform
+                       terraform --version
                        cd terraform/staging
                        terraform init
                        terraform apply --auto-approve
@@ -78,7 +82,7 @@ pipeline{
                 expression { GIT_BRANCH == 'origin/ansible-feat'}
             }
             environment{
-                HOST_IP = sh(script:'', returnStdout: true).trim()
+                HOST_IP = sh(script:'cd terraform/staging && terraform output ec2_public_ip', returnStdout: true).trim()
                 PGADMIN_PORT = "8082"
                 ODOO_PORT = "8081"
                 IC_PORT = "80"
@@ -125,6 +129,10 @@ pipeline{
                         input message: 'Do you want to approve the deploy in production?', ok: 'Yes'
                     }
                     sh '''#!/bin/bash
+                       terraform --version || curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+                       terraform --version || sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+                       terraform --version || sudo apt-get update && sudo apt-get install terraform
+                       terraform --version
                        cd terraform/prod
                        terraform init
                        terraform apply --auto-approve
@@ -144,7 +152,7 @@ pipeline{
                 expression { GIT_BRANCH == 'origin/ansible-feat'}
             }
             environment{
-                HOST_IP = "${PROD_HOST}"
+                HOST_IP = sh(script:'cd terraform/prod && terraform output ec2_public_ip', returnStdout: true).trim()
                 PGADMIN_PORT = "8082"
                 ODOO_PORT = "8081"
                 IC_PORT = "80"

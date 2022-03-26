@@ -1,6 +1,6 @@
 provider "aws" {
   region                  = "us-east-1"
-  shared_credentials_file = "C:/Files/Docs Perso/DevOps/AWS/.aws/credentials"
+  shared_credentials_file = "/Users/sadofrazer/Données/DevOps/AWS/.aws/credentials"
 }
 
 terraform {
@@ -8,7 +8,7 @@ terraform {
    bucket                  = "terraform-backend-frazer"
    key                     = "frazer-prod.tfstate"
    region                  = "us-east-1"
-   shared_credentials_file = "C:/Files/Docs Perso/DevOps/AWS/.aws/credentials"
+   shared_credentials_file = "/Users/sadofrazer/Données/DevOps/AWS/.aws/credentials"
  }
 }
 

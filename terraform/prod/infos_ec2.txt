@@ -1,1 +1,2 @@
 
+prod [ PUBLIC IP: 52.0.204.15 ; ID: i-0aabd324a1e5db637 ; AZ: us-east-1b ]
