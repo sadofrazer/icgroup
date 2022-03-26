@@ -100,6 +100,7 @@ pipeline{
                         if ( env.DEPLOY_APP == "yes"){
                             sh '''#!/bin/bash
                                 echo "deploy_app=${DEPLOY_APP}"
+                                echo $HOST_IP
                                 ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} "docker stop ${CONTAINER_NAME} || true"
                                 ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${HOST_IP} "docker rm ${CONTAINER_NAME} || true"
                                 cd ansible
