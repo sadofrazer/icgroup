@@ -150,7 +150,7 @@ pipeline{
                             cd prod
                             terraform init --reconfigure
                             terraform apply --auto-approve
-                            terraform output --raw ec2_public_ip > public_ip.txt
+                            terraform output --raw ec2_public_ip > $HOME/.aws/public_ip.txt
                         '''
                     }
                 }
