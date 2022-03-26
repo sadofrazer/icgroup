@@ -150,8 +150,9 @@ pipeline{
                             cd prod
                             terraform init --reconfigure
                             terraform apply --auto-approve
-                            env.HOST_IP = sh(script:'terraform output --raw ec2_public_ip', returnStdout: true).trim()
+                            terraform output --raw ec2_public_ip > $HOME/.aws/public_ip.txt
                         '''
+                        env.HOST_IP = sh(script:'cat $HOME/.aws/public_ip.txt', returnStdout: true).trim()
                     }
                 }
             }
