@@ -70,7 +70,7 @@ pipeline{
                        terraform --version || mv terraform /usr/sbin/terraform
                        terraform --version
                        cd staging
-                       terraform init
+                       terraform init --reconfigure
                        terraform apply --auto-approve
                     '''
                 }
@@ -136,7 +136,7 @@ pipeline{
                        terraform --version || mv terraform /usr/sbin/terraform
                        terraform --version
                        cd prod
-                       terraform init
+                       terraform init --reconfigure
                        terraform apply --auto-approve
                     '''
                 }
