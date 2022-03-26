@@ -76,6 +76,7 @@ pipeline{
                             cd staging
                             terraform init --reconfigure
                             terraform apply --auto-approve
+                            terraform output --raw ec2_public_ip > public_ip.txt
                         '''
                     }
                 }
@@ -88,8 +89,7 @@ pipeline{
                 expression { GIT_BRANCH == 'origin/terraform-feat'}
             }
             environment{
-                HOST_IP_INIT = sh(script:'cd terraform/prod && terraform init -reconfigure', returnStdout: true).trim()
-                HOST_IP = sh(script:'cd terraform/prod && terraform output --raw ec2_public_ip', returnStdout: true).trim()
+                HOST_IP = sh(script:'cd terraform/prod && echo -n public_ip.txt', returnStdout: true).trim()
                 PGADMIN_PORT = "8082"
                 ODOO_PORT = "8081"
                 IC_PORT = "80"
@@ -149,6 +149,7 @@ pipeline{
                             cd prod
                             terraform init --reconfigure
                             terraform apply --auto-approve
+                            terraform output --raw ec2_public_ip > public_ip.txt
                         '''
                     }
                 }
@@ -166,8 +167,7 @@ pipeline{
                 expression { GIT_BRANCH == 'origin/terraform-feat'}
             }
             environment{
-                HOST_IP_INIT = sh(script:'cd terraform/prod && terraform init -reconfigure', returnStdout: true).trim()
-                HOST_IP = sh(script:'cd terraform/prod && terraform output --raw ec2_public_ip', returnStdout: true).trim()
+                HOST_IP = sh(script:'cd terraform/prod && echo -n public_ip.txt', returnStdout: true).trim()
                 PGADMIN_PORT = "8082"
                 ODOO_PORT = "8081"
                 IC_PORT = "80"
