@@ -64,13 +64,12 @@ pipeline{
             steps{
                 script{
                     sh '''#!/bin/bash
+                       cd terraform
                        terraform --version || curl https://releases.hashicorp.com/terraform/1.1.7/terraform_1.1.7_linux_amd64.zip > terraform.zip
-                       terraform --version || unzip terraform.zip
-                       terraform --version || chmod +x terraform
-                       terraform --version || rm -f /usr/sbin/terraform
+                       terraform --version || unzip terraform.zip && chmod +x terraform
                        terraform --version || mv terraform /usr/sbin/terraform
                        terraform --version
-                       cd terraform/staging
+                       cd staging
                        terraform init
                        terraform apply --auto-approve
                     '''
@@ -131,13 +130,12 @@ pipeline{
                         input message: 'Do you want to approve the deploy in production?', ok: 'Yes'
                     }
                     sh '''#!/bin/bash
+                       cd terraform
                        terraform --version || curl https://releases.hashicorp.com/terraform/1.1.7/terraform_1.1.7_linux_amd64.zip > terraform.zip
-                       terraform --version || unzip terraform.zip
-                       terraform --version || chmod +x terraform
-                       terraform --version || rm -f /usr/sbin/terraform
+                       terraform --version || unzip terraform.zip && chmod +x terraform
                        terraform --version || mv terraform /usr/sbin/terraform
                        terraform --version
-                       cd terraform/prod
+                       cd prod
                        terraform init
                        terraform apply --auto-approve
                     '''
