@@ -62,17 +62,20 @@ pipeline{
         stage ('Deploy staging infra'){
             
             steps{
-                script{
-                    sh '''#!/bin/bash
-                       cd terraform
-                       terraform --version || curl https://releases.hashicorp.com/terraform/1.1.7/terraform_1.1.7_linux_amd64.zip > terraform.zip
-                       terraform --version || unzip terraform.zip && chmod +x terraform
-                       terraform --version || mv terraform /usr/sbin/terraform
-                       terraform --version
-                       cd staging
-                       terraform init --reconfigure
-                       terraform apply --auto-approve
-                    '''
+                withCredentials([file(credentialsId: 'aws_credentials', variable: 'FILE')]) {
+                    script{
+                        sh '''#!/bin/bash
+                            cp $FILE $HOME/credentials
+                            cd terraform
+                            terraform --version || curl https://releases.hashicorp.com/terraform/1.1.7/terraform_1.1.7_linux_amd64.zip > terraform.zip
+                            terraform --version || unzip terraform.zip && chmod +x terraform
+                            terraform --version || mv terraform /usr/sbin/terraform
+                            terraform --version
+                            cd staging
+                            terraform init --reconfigure
+                            terraform apply --auto-approve
+                        '''
+                    }
                 }
             }
         }
@@ -125,20 +128,23 @@ pipeline{
         stage ('Deploy prod infra'){
             
             steps{
-                script{
-                    timeout(time: 15, unit: "MINUTES") {
-                        input message: 'Do you want to approve the deploy in production?', ok: 'Yes'
+                withCredentials([file(credentialsId: 'aws_credentials', variable: 'FILE')]) {
+                    script{
+                        timeout(time: 15, unit: "MINUTES") {
+                            input message: 'Do you want to approve the deploy in production?', ok: 'Yes'
+                        }
+                        sh '''#!/bin/bash
+                            cp $FILE $HOME/credentials
+                            cd terraform
+                            terraform --version || curl https://releases.hashicorp.com/terraform/1.1.7/terraform_1.1.7_linux_amd64.zip > terraform.zip
+                            terraform --version || unzip terraform.zip && chmod +x terraform
+                            terraform --version || mv terraform /usr/sbin/terraform
+                            terraform --version
+                            cd prod
+                            terraform init --reconfigure
+                            terraform apply --auto-approve
+                        '''
                     }
-                    sh '''#!/bin/bash
-                       cd terraform
-                       terraform --version || curl https://releases.hashicorp.com/terraform/1.1.7/terraform_1.1.7_linux_amd64.zip > terraform.zip
-                       terraform --version || unzip terraform.zip && chmod +x terraform
-                       terraform --version || mv terraform /usr/sbin/terraform
-                       terraform --version
-                       cd prod
-                       terraform init --reconfigure
-                       terraform apply --auto-approve
-                    '''
                 }
             }
         }
