@@ -89,7 +89,7 @@ pipeline{
             }
             environment{
                 HOST_IP_INIT = sh(script:'cd terraform/prod && terraform init -reconfigure', returnStdout: true).trim()
-                HOST_IP = sh(script:'cd terraform/prod && terraform output ec2_public_ip', returnStdout: true).trim()
+                HOST_IP = sh(script:'cd terraform/prod && terraform output --raw ec2_public_ip', returnStdout: true).trim()
                 PGADMIN_PORT = "8082"
                 ODOO_PORT = "8081"
                 IC_PORT = "80"
@@ -167,7 +167,7 @@ pipeline{
             }
             environment{
                 HOST_IP_INIT = sh(script:'cd terraform/prod && terraform init -reconfigure', returnStdout: true).trim()
-                HOST_IP = sh(script:'cd terraform/prod && terraform output ec2_public_ip', returnStdout: true).trim()
+                HOST_IP = sh(script:'cd terraform/prod && terraform output --raw ec2_public_ip', returnStdout: true).trim()
                 PGADMIN_PORT = "8082"
                 ODOO_PORT = "8081"
                 IC_PORT = "80"
