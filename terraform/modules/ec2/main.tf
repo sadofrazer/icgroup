@@ -9,8 +9,7 @@ data "aws_ami" "my_ubuntu_ami" {
 }
 
 resource "aws_instance" "frazer-ec2" {
-  ami             = data.aws_ami.my_ubuntu_ami.id
-  instance_type   = var.instance_type
+  ami             = "ami-0149b2da6ceec4bb0"
   key_name        = var.ssh_key
   availability_zone = "${var.az}"
   security_groups = ["${var.sg_name}"]
