@@ -12,6 +12,7 @@ resource "aws_instance" "frazer-ec2" {
   ami             = "ami-0149b2da6ceec4bb0"
   key_name        = var.ssh_key
   availability_zone = "${var.az}"
+  instance_type = "t2.micro"
   security_groups = ["${var.sg_name}"]
   tags = {
     Name = "${var.author}-ec2"
