@@ -85,7 +85,12 @@ pipeline{
         }
 
         stage ('deploy app on Staging env'){
-            agent any
+            agent {
+                docker {
+                    image('ansible-ubuntu')
+                    args ' -u root'
+                }
+            }
             when {
                 expression { GIT_BRANCH == 'origin/terraform-feat'}
             }
